@@ -20,8 +20,17 @@ for (let i = 1; i <= 100; i++) {
         tipo: i % 2 === 0 ? "ingreso" : "gasto",
     });
 }
+//Todos los eventos
+app.get("/api/eventos", (req, res) => {
+    console.log("Log: [Metodo: GET] , [url:/api/eventos] hora", fechaactual.getHours());
+    res.json({
+        code: "OK",
+        message: "Eventos disponibles!",
+        data: { eventos },
+    });
+});
 //Paginacion
-app.get("/api/eventos/query", (0, express_validator_1.query)("pagina").notEmpty(), (0, express_validator_1.query)("paso").notEmpty(), (req, res) => {
+app.get("/api/eventos/pag", (0, express_validator_1.query)("pagina").notEmpty(), (0, express_validator_1.query)("paso").notEmpty(), (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         return res.status(200).json({
@@ -30,7 +39,7 @@ app.get("/api/eventos/query", (0, express_validator_1.query)("pagina").notEmpty(
             errors: errors.array(),
         });
     }
-    console.log("Log: [Metodo: GET] , [url:/api/eventos/query] hoRA", fechaactual.getHours(), "query:", req.query);
+    console.log("Log: [Metodo: GET] , [url:/api/eventos/pag] hora", fechaactual.getHours(), "query:", req.query);
     const paginaactual = Number(req.query.pagina);
     const paso = Number(req.query.paso);
     const inicio = (paginaactual - 1) * paso;
@@ -45,6 +54,7 @@ app.get("/api/eventos/query", (0, express_validator_1.query)("pagina").notEmpty(
         },
     });
 });
+//Crear Evento
 app.post("/api/eventos", (req, res) => {
     console.log("Log: [Metodo: POST] , [url:/api/eventos] hora", fechaactual.getHours(), "query:", req.query);
     const { id, nombre, descripcion, monto, fecha, tipo } = req.body;
@@ -52,6 +62,7 @@ app.post("/api/eventos", (req, res) => {
     eventos.push(nuevoEvento);
     res.status(201).json({ code: "OK", message: "Evento Creado" });
 });
+//Buscar por ID
 app.get("/api/eventos/query", (0, express_validator_1.query)("id").notEmpty(), (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -75,7 +86,8 @@ app.get("/api/eventos/query", (0, express_validator_1.query)("id").notEmpty(), (
         data: { evento },
     });
 });
-app.put("/api/eventos:id", (req, res) => {
+//Actualizar Evento
+app.put("/api/eventos/:id", (req, res) => {
     console.log("Log: [Metodo: PUT] , [url:/api/eventos:id] hora", fechaactual.getHours(), "params:", req.params);
     const id = req.params.id;
     const evento = eventos.find((evento) => evento.id == id);
@@ -95,7 +107,8 @@ app.put("/api/eventos:id", (req, res) => {
     /** Evento No Encontrado  */
     res.status(404).json({ code: "NF", message: "Evento no Encontrado!" });
 });
-app.delete("/api/eventos:id", (req, res) => {
+//Eliminar Evento
+app.delete("/api/eventos/:id", (req, res) => {
     console.log("Log: [Metodo: DELETE] , [url:/api/eventos:id] hora", fechaactual.getHours(), "params:", req.params);
     const id = req.params.id;
     console.log("DELETE /eventos/:id:", id);

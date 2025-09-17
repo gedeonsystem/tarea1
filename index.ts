@@ -20,9 +20,22 @@ for (let i = 1; i <= 100; i++) {
   });
 }
 
+//Todos los eventos
+app.get("/api/eventos", (req: Request, res: Response) => {
+  console.log(
+    "Log: [Metodo: GET] , [url:/api/eventos] hora",
+    fechaactual.getHours()
+  );
+  res.json({
+    code: "OK",
+    message: "Eventos disponibles!",
+    data: { eventos },
+  });
+});
+
 //Paginacion
 app.get(
-  "/api/eventos/query",
+  "/api/eventos/pag",
   query("pagina").notEmpty(),
   query("paso").notEmpty(),
   (req: Request, res: Response) => {
@@ -35,7 +48,7 @@ app.get(
       });
     }
     console.log(
-      "Log: [Metodo: GET] , [url:/api/eventos/query] hora",
+      "Log: [Metodo: GET] , [url:/api/eventos/pag] hora",
       fechaactual.getHours(),
       "query:",
       req.query
@@ -56,6 +69,7 @@ app.get(
   }
 );
 
+//Crear Evento
 app.post("/api/eventos", (req, res) => {
   console.log(
     "Log: [Metodo: POST] , [url:/api/eventos] hora",
@@ -69,6 +83,7 @@ app.post("/api/eventos", (req, res) => {
   res.status(201).json({ code: "OK", message: "Evento Creado" });
 });
 
+//Buscar por ID
 app.get(
   "/api/eventos/query",
   query("id").notEmpty(),
@@ -103,8 +118,8 @@ app.get(
     });
   }
 );
-
-app.put("/api/eventos:id", (req: Request, res: Response) => {
+//Actualizar Evento
+app.put("/api/eventos/:id", (req: Request, res: Response) => {
   console.log(
     "Log: [Metodo: PUT] , [url:/api/eventos:id] hora",
     fechaactual.getHours(),
@@ -131,7 +146,8 @@ app.put("/api/eventos:id", (req: Request, res: Response) => {
   res.status(404).json({ code: "NF", message: "Evento no Encontrado!" });
 });
 
-app.delete("/api/eventos:id", (req: Request, res: Response) => {
+//Eliminar Evento
+app.delete("/api/eventos/:id", (req: Request, res: Response) => {
   console.log(
     "Log: [Metodo: DELETE] , [url:/api/eventos:id] hora",
     fechaactual.getHours(),
